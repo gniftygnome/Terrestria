@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlackBambooBlock extends BambooBlock {
 	public static final int LOW_MAX_HEIGHT = 8;
-	public static final int HIGH_MAX_HEIGHT = 10;
+	public static final int HIGH_MAX_HEIGHT = 12;
 
 	public BlackBambooBlock(Settings settings) {
 		super(settings);
