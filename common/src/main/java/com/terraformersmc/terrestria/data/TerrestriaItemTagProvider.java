@@ -20,6 +20,8 @@ public class TerrestriaItemTagProvider extends FabricTagProvider.ItemTagProvider
 
 	@Override
 	public void configure(RegistryWrapper.WrapperLookup registries) {
+		copy(BlockTags.BAMBOO_BLOCKS, ItemTags.BAMBOO_BLOCKS);
+
 		copy(BlockTags.BUTTONS, ItemTags.BUTTONS);
 
 		copy(BlockTags.DIRT, ItemTags.DIRT);
@@ -123,10 +125,8 @@ public class TerrestriaItemTagProvider extends FabricTagProvider.ItemTagProvider
 
 	private void addWood(WoodItems woodItem) {
 		// Add boats if they exist via the WoodItem.
-		if (woodItem.boat != null) {
+		if (woodItem.getConfig().hasBoat()) {
 			getOrCreateTagBuilder(ItemTags.BOATS).add(woodItem.boat);
-		}
-		if (woodItem.chestBoat != null) {
 			getOrCreateTagBuilder(ItemTags.CHEST_BOATS).add(woodItem.chestBoat);
 		}
 	}

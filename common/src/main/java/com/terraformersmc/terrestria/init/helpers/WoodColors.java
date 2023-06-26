@@ -2,6 +2,8 @@ package com.terraformersmc.terrestria.init.helpers;
 
 import net.minecraft.block.MapColor;
 
+import java.util.Map;
+
 public class WoodColors {
 	public static final WoodColors REDWOOD;
 	public static final WoodColors HEMLOCK;
@@ -12,8 +14,13 @@ public class WoodColors {
 	public static final WoodColors RAINBOW_EUCALYPTUS;
 	public static final WoodColors SAKURA;
 	public static final WoodColors YUCCA_PALM;
+	public static final WoodColors BLACK_BAMBOO;
 
 	static {
+		BLACK_BAMBOO = new WoodColors();
+		BLACK_BAMBOO.bark = MapColor.TERRACOTTA_BLACK;
+		BLACK_BAMBOO.planks = MapColor.TERRACOTTA_GREEN;
+
 		REDWOOD = new WoodColors();
 		REDWOOD.bark = MapColor.TERRACOTTA_RED;
 		REDWOOD.planks = MapColor.OAK_TAN;

@@ -97,6 +97,8 @@ public class TerrestriaClient implements ClientModInitializer {
 				TerrestriaBlocks.JUNGLE_PALM_SAPLING,
 				TerrestriaBlocks.BRYCE_SAPLING,
 				TerrestriaBlocks.YUCCA_PALM_SAPLING,
+				TerrestriaBlocks.BLACK_BAMBOO_SAPLING,
+				TerrestriaBlocks.BLACK_BAMBOO.bamboo,
 				TerrestriaBlocks.CATTAIL,
 				TerrestriaBlocks.TALL_CATTAIL,
 				TerrestriaBlocks.INDIAN_PAINTBRUSH,
@@ -128,7 +130,8 @@ public class TerrestriaClient implements ClientModInitializer {
 				TerrestriaBlocks.POTTED_ALOE_VERA,
 				TerrestriaBlocks.POTTED_TINY_CACTUS,
 				TerrestriaBlocks.POTTED_SAGUARO_CACTUS_SAPLING,
-				TerrestriaBlocks.POTTED_YUCCA_PALM_SAPLING
+				TerrestriaBlocks.POTTED_YUCCA_PALM_SAPLING,
+				TerrestriaBlocks.POTTED_BLACK_BAMBOO
 		);
 
 		addColoredGrass(TerrestriaBlocks.ANDISOL.getGrassBlock());
@@ -151,7 +154,9 @@ public class TerrestriaClient implements ClientModInitializer {
 				TerrestriaBlocks.SAKURA.sign,
 				TerrestriaBlocks.SAKURA.hangingSign,
 				TerrestriaBlocks.YUCCA_PALM.sign,
-				TerrestriaBlocks.YUCCA_PALM.hangingSign
+				TerrestriaBlocks.YUCCA_PALM.hangingSign,
+				TerrestriaBlocks.BLACK_BAMBOO.sign,
+				TerrestriaBlocks.BLACK_BAMBOO.hangingSign
 		);
 
 		ColorProviderRegistry.ITEM.register(
@@ -182,6 +187,8 @@ public class TerrestriaClient implements ClientModInitializer {
 		TerraformBoatClientHelper.registerModelLayers(new Identifier(Terrestria.MOD_ID, "rainbow_eucalyptus"), false);
 		TerraformBoatClientHelper.registerModelLayers(new Identifier(Terrestria.MOD_ID, "sakura"), false);
 		TerraformBoatClientHelper.registerModelLayers(new Identifier(Terrestria.MOD_ID, "yucca_palm"), false);
+
+		TerraformBoatClientHelper.registerModelLayers(new Identifier(Terrestria.MOD_ID, "black_bamboo"), true);
 	}
 
 	@SafeVarargs

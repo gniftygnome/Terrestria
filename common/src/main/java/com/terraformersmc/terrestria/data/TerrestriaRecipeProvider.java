@@ -71,10 +71,11 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 	}
 
 	private void generateWood(Consumer<RecipeJsonProvider> exporter, WoodItems woodItem, TagKey<Item> logsTag) {
-		if (woodItem.hasBoat()) {
-			assert (woodItem.boat != null);  // it's not null; this is just for IDEA
+		if (woodItem.getConfig().hasBoat()) {
+			// they're not null; this is just for IDEA
+			assert (woodItem.boat != null) && (woodItem.chestBoat != null);
+
 			offerBoatRecipe(exporter, woodItem.boat, woodItem.planks);
-			assert (woodItem.chestBoat != null);  // it's not null; this is just for IDEA
 			offerChestBoatRecipe(exporter, woodItem.chestBoat, woodItem.boat);
 		}
 
@@ -117,8 +118,10 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 			.offerTo(exporter);
 
 		// leaf piles are an optional wood feature
-		if (woodItem.hasLeafPile()) {
-			assert (woodItem.leafPile != null);  // it's not null; this is just for IDEA
+		if (woodItem.getConfig().hasLeafPile()) {
+			// it's not null; this is just for IDEA
+			assert (woodItem.leafPile != null);
+
 			new ShapedRecipeJsonBuilder(RecipeCategory.DECORATIONS, woodItem.leafPile, 16)
 					.pattern("LL")
 					.input('L', woodItem.leaves)
@@ -126,9 +129,11 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 					.offerTo(exporter);
 		}
 
-		// some woodItem with no real wood have wood set to log
-		if (woodItem.hasWood()) {
-			assert (woodItem.wood != null);  // it's not null; this is just for IDEA
+		// "wood" itself is an optional wood feature
+		if (woodItem.getConfig().hasWood()) {
+			// they're not null; this is just for IDEA
+			assert (woodItem.wood != null) && (woodItem.strippedWood != null);
+
 			new ShapedRecipeJsonBuilder(RecipeCategory.BUILDING_BLOCKS, woodItem.wood, 3)
 				.group("bark")
 				.pattern("LL")
@@ -137,13 +142,26 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 				.criterion("has_logs", InventoryChangedCriterion.Conditions.items(woodItem.log))
 				.offerTo(exporter);
 
-			assert (woodItem.strippedWood != null);  // it's not null; this is just for IDEA
 			new ShapedRecipeJsonBuilder(RecipeCategory.BUILDING_BLOCKS, woodItem.strippedWood, 3)
 				.group("bark")
 				.pattern("LL")
 				.pattern("LL")
 				.input('L', woodItem.strippedLog)
 				.criterion("has_logs", InventoryChangedCriterion.Conditions.items(woodItem.strippedLog))
+				.offerTo(exporter);
+		}
+
+		// mosaics are a newer fancy wood feature
+		if (woodItem.getConfig().hasMosaic()) {
+			// they're not null; this is just for IDEA
+			assert woodItem.mosaic != null &&  woodItem.mosaicSlab != null && woodItem.mosaicStairs != null;
+
+			offerMosaicRecipe(exporter, RecipeCategory.BUILDING_BLOCKS, woodItem.mosaic, woodItem.slab);
+
+			offerSlabRecipe(exporter, RecipeCategory.BUILDING_BLOCKS, woodItem.mosaicSlab, woodItem.mosaic);
+
+			createStairsRecipe(woodItem.mosaicStairs, Ingredient.ofItems(woodItem.mosaic))
+				.criterion("has_mosaic", InventoryChangedCriterion.Conditions.items(woodItem.mosaic))
 				.offerTo(exporter);
 		}
 	}

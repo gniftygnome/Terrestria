@@ -17,9 +17,7 @@ import net.minecraft.block.*;
 import net.minecraft.util.Identifier;
 
 public class WoodBlocks {
-	private final String NAME;
-	private final WoodColors COLORS;
-	private final LogSize SIZE;
+	private final WoodConfig config;
 
 	public final Block log;
 	public final Block quarterLog;
@@ -34,6 +32,9 @@ public class WoodBlocks {
 	public final DoorBlock door;
 	public final ButtonBlock button;
 	public final PressurePlateBlock pressurePlate;
+	public final Block mosaic;
+	public final SlabBlock mosaicSlab;
+	public final StairsBlock mosaicStairs;
 	public final TerraformSignBlock sign;
 	public final TerraformWallSignBlock wallSign;
 	public final TerraformHangingSignBlock hangingSign;
@@ -42,11 +43,15 @@ public class WoodBlocks {
 	public final Block strippedLog;
 	public final Block strippedQuarterLog;
 	public final Block strippedWood;
+	public final BambooBlock bamboo;
 
-	private WoodBlocks(String name, WoodColors colors, LogSize size, boolean hasLeafPile, boolean hasQuarterLog, boolean usesExtendedLeaves) {
-		this.NAME = name;
-		this.COLORS = colors;
-		this.SIZE = size;
+	private WoodBlocks(WoodConfig config) {
+		this.config = config;
+
+		// convenience
+		String name = config.name();
+		WoodColors colors = config.colors();
+		WoodConfig.LogSize size = config.size();
 
 		// register manufactured blocks
 
@@ -60,6 +65,16 @@ public class WoodBlocks {
 		pressurePlate = TerrestriaRegistry.register(name + "_pressure_plate", new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE).mapColor(colors.planks), BlockSetType.OAK));
 		trapdoor = TerrestriaRegistry.register(name + "_trapdoor", new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(colors.planks), BlockSetType.OAK));
 
+		if (config.hasMosaic()) {
+			mosaic = TerrestriaRegistry.register(name + "_mosaic", new Block(FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).mapColor(colors.planks)));
+			mosaicSlab = TerrestriaRegistry.register(name + "_mosaic_slab", new SlabBlock(FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC_SLAB).mapColor(colors.planks)));
+			mosaicStairs = TerrestriaRegistry.register(name + "_mosaic_stairs", new StairsBlock(mosaic.getDefaultState(), FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC_STAIRS).mapColor(colors.planks)));
+		} else {
+			mosaic = null;
+			mosaicSlab = null;
+			mosaicStairs = null;
+		}
+
 		Identifier signTexture = Identifier.of(Terrestria.MOD_ID, "entity/signs/" + name);
 		sign = TerrestriaRegistry.register(name + "_sign", new TerraformSignBlock(signTexture, FabricBlockSettings.copyOf(Blocks.OAK_SIGN).mapColor(colors.planks)));
 		wallSign = TerrestriaRegistry.register(name + "_wall_sign", new TerraformWallSignBlock(signTexture, FabricBlockSettings.copyOf(Blocks.OAK_WALL_SIGN).mapColor(colors.planks).dropsLike(sign)));
@@ -71,68 +86,81 @@ public class WoodBlocks {
 
 		// register natural and stripped blocks
 
-		if (usesExtendedLeaves) {
-			if (size.equals(LogSize.SMALL)) {
-				throw new IllegalArgumentException("Small log trees are not compatible with extended leaves, I'm not sure how you even did this...");
-			}
-			leaves = TerrestriaRegistry.register(name + "_leaves", new TerrestriaOptiLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).mapColor(colors.leaves).allowsSpawning(TerrestriaBlocks::canSpawnOnLeaves).suffocates(TerrestriaBlocks::never).blockVision(TerrestriaBlocks::never)));
-		} else {
-			if (size.equals(LogSize.SMALL)) {
-				leaves = TerrestriaRegistry.register(name + "_leaves", new TransparentLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).mapColor(colors.leaves).allowsSpawning(TerrestriaBlocks::canSpawnOnLeaves).suffocates(TerrestriaBlocks::never).blockVision(TerrestriaBlocks::never)));
+		if (config.hasLeaves()) {
+			if (config.usesExtendedLeaves()) {
+				if (size.equals(WoodConfig.LogSize.SMALL)) {
+					throw new IllegalArgumentException("Small log trees are not compatible with extended leaves, I'm not sure how you even did this...");
+				}
+				leaves = TerrestriaRegistry.register(name + "_leaves", new TerrestriaOptiLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).mapColor(colors.leaves).allowsSpawning(TerrestriaBlocks::canSpawnOnLeaves).suffocates(TerrestriaBlocks::never).blockVision(TerrestriaBlocks::never)));
 			} else {
-				leaves = TerrestriaRegistry.register(name + "_leaves", new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).mapColor(colors.leaves).allowsSpawning(TerrestriaBlocks::canSpawnOnLeaves).suffocates(TerrestriaBlocks::never).blockVision(TerrestriaBlocks::never)));
+				if (size.equals(WoodConfig.LogSize.SMALL)) {
+					leaves = TerrestriaRegistry.register(name + "_leaves", new TransparentLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).mapColor(colors.leaves).allowsSpawning(TerrestriaBlocks::canSpawnOnLeaves).suffocates(TerrestriaBlocks::never).blockVision(TerrestriaBlocks::never)));
+				} else {
+					leaves = TerrestriaRegistry.register(name + "_leaves", new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).mapColor(colors.leaves).allowsSpawning(TerrestriaBlocks::canSpawnOnLeaves).suffocates(TerrestriaBlocks::never).blockVision(TerrestriaBlocks::never)));
+				}
 			}
+		} else {
+			leaves = null;
 		}
 
-		if (hasLeafPile) {
+		if (config.hasLeafPile()) {
 			leafPile = TerrestriaRegistry.register(name + "_leaf_pile", new LeafPileBlock(FabricBlockSettings.copyOf(Blocks.PINK_PETALS).mapColor(colors.leaves)));
 		} else {
 			leafPile = null;
 		}
 
-		if (size.equals(LogSize.SMALL)) {
+		if (size.equals(WoodConfig.LogSize.SMALL)) {
 			// Small logs have neither wood nor quarter logs.
 			log = TerrestriaRegistry.register(name + "_log", SmallLogBlock.of(leaves, colors.planks, colors.bark));
 			strippedLog = TerrestriaRegistry.register("stripped_" + name + "_log", SmallLogBlock.of(leaves, colors.planks));
 
-			wood = null;
-			strippedWood = null;
-
-			quarterLog = null;
-			strippedQuarterLog = null;
-		} else {
-			log = TerrestriaRegistry.register(name + "_log", PillarLogHelper.of(colors.planks, colors.bark));
-			strippedLog = TerrestriaRegistry.register("stripped_" + name + "_log", PillarLogHelper.of(colors.planks));
-
-			wood = TerrestriaRegistry.register(name + "_wood", PillarLogHelper.of(colors.bark));
-			strippedWood = TerrestriaRegistry.register("stripped_" + name + "_wood", PillarLogHelper.of(colors.planks));
-
-			if (hasQuarterLog) {
-				quarterLog = TerrestriaRegistry.register(name + "_quarter_log", QuarterLogBlock.of(colors.planks, colors.bark));
-				strippedQuarterLog = TerrestriaRegistry.register("stripped_" + name + "_quarter_log", QuarterLogBlock.of(colors.planks));
+			if (config.hasWood()) {
+				wood = TerrestriaRegistry.register(name + "_wood", SmallLogBlock.of(leaves, colors.bark));
+				strippedWood = TerrestriaRegistry.register("stripped_" + name + "_wood", SmallLogBlock.of(leaves, colors.planks));
 			} else {
-				quarterLog = null;
-				strippedQuarterLog = null;
+				wood = null;
+				strippedWood = null;
+			}
+		} else {
+			if (config.isBamboo()) {
+				log = TerrestriaRegistry.register(name + "_block", PillarLogHelper.of(colors.planks, colors.bark));
+				strippedLog = TerrestriaRegistry.register("stripped_" + name + "_block", PillarLogHelper.of(colors.planks));
+			} else {
+				log = TerrestriaRegistry.register(name + "_log", PillarLogHelper.of(colors.planks, colors.bark));
+				strippedLog = TerrestriaRegistry.register("stripped_" + name + "_log", PillarLogHelper.of(colors.planks));
+			}
+
+			if (config.hasWood()) {
+				wood = TerrestriaRegistry.register(name + "_wood", PillarLogHelper.of(colors.bark));
+				strippedWood = TerrestriaRegistry.register("stripped_" + name + "_wood", PillarLogHelper.of(colors.planks));
+			} else {
+				wood = null;
+				strippedWood = null;
 			}
 		}
+
+		if (config.hasQuarterLog()) {
+			quarterLog = TerrestriaRegistry.register(name + "_quarter_log", QuarterLogBlock.of(colors.planks, colors.bark));
+			strippedQuarterLog = TerrestriaRegistry.register("stripped_" + name + "_quarter_log", QuarterLogBlock.of(colors.planks));
+		} else {
+			quarterLog = null;
+			strippedQuarterLog = null;
+		}
+
+		if (config.isBamboo()) {
+			bamboo = TerrestriaRegistry.register(name, config.bamboo());
+		} else {
+			bamboo = null;
+		}
+
+		this.addFlammables();
+		this.addStrippables();
 	}
 
-	public static WoodBlocks register(String name, WoodColors colors, LogSize size, boolean hasLeafPile, boolean hasQuarteredLog, boolean usesExtendedLeaves) {
-		WoodBlocks blocks = new WoodBlocks(name, colors, size, hasLeafPile, hasQuarteredLog, usesExtendedLeaves);
-
-		blocks.addFlammables();
-		blocks.addStrippables();
-
-		return blocks;
+	public static WoodBlocks register(WoodConfig config) {
+		return new WoodBlocks(config);
 	}
 
-	public static WoodBlocks register(String name, WoodColors colors, LogSize size) {
-		return register(name, colors, size, false, false, false);
-	}
-
-	public static WoodBlocks register(String name, WoodColors colors) {
-		return register(name, colors, LogSize.NORMAL);
-	}
 
 	private void addFlammables() {
 		FlammableBlockRegistry flammableRegistry = FlammableBlockRegistry.getDefaultInstance();
@@ -144,20 +172,26 @@ public class WoodBlocks {
 		flammableRegistry.add(slab, 5, 20);
 		flammableRegistry.add(stairs, 5, 20);
 
+		if (config.hasMosaic()) {
+			flammableRegistry.add(mosaic, 5, 20);
+			flammableRegistry.add(mosaicSlab, 5, 20);
+			flammableRegistry.add(mosaicStairs, 5, 20);
+		}
+
 		// tree
 		flammableRegistry.add(log, 5, 5);
 		flammableRegistry.add(strippedLog, 5, 5);
-		if (hasWood()) {
+		if (config.hasWood()) {
 			flammableRegistry.add(wood, 5, 5);
 			flammableRegistry.add(strippedWood, 5, 5);
 		}
-		if (hasQuarterLog()) {
+		if (config.hasQuarterLog()) {
 			flammableRegistry.add(quarterLog, 5, 5);
 			flammableRegistry.add(strippedQuarterLog, 5, 5);
 		}
 
 		flammableRegistry.add(leaves, 30, 60);
-		if (hasLeafPile()) {
+		if (config.hasLeafPile()) {
 			flammableRegistry.add(leafPile, 30, 60);
 		}
 	}
@@ -174,42 +208,7 @@ public class WoodBlocks {
 		}
 	}
 
-	public String getName() {
-		return NAME;
-	}
-
-	public WoodColors getColors() {
-		return COLORS;
-	}
-
-	public LogSize getSize() {
-		return SIZE;
-	}
-
-	public boolean hasQuarterLog() {
-		return (quarterLog != null && strippedQuarterLog != null);
-	}
-
-	public boolean hasLeafPile() {
-		return (leafPile != null);
-	}
-
-	public boolean hasWood() {
-		return (wood != null && strippedWood != null);
-	}
-
-	public enum LogSize {
-		NORMAL("normal"),
-		SMALL("small");
-
-		private final String name;
-
-		LogSize(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return this.name;
-		}
+	public WoodConfig getConfig() {
+		return config;
 	}
 }

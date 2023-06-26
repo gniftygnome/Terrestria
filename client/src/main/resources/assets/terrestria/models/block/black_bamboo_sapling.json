@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/tinted_cross",
+  "textures": {
+    "cross": "terrestria:block/black_bamboo_stage0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrestria:block/black_bamboo_mosaic_slab"
+    },
+    "type=double": {
+      "model": "terrestria:block/black_bamboo_mosaic"
+    },
+    "type=top": {
+      "model": "terrestria:block/black_bamboo_mosaic_slab_top"
+    }
+  }
+}

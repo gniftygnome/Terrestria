@@ -244,19 +244,38 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 			.add(woodBlock.strippedLog);
 		getOrCreateTagBuilder(TerrestriaBlockTags.STRIPPED_LOGS).add(woodBlock.strippedLog);
 
-		if (woodBlock.hasWood()) {
+		if (woodBlock.getConfig().hasWood()) {
 			woodBuilder
 				.add(woodBlock.wood)
 				.add(woodBlock.strippedWood);
 			getOrCreateTagBuilder(TerrestriaBlockTags.STRIPPED_WOOD).add(woodBlock.strippedWood);
 		}
 
-		if (woodBlock.hasQuarterLog()) {
+		if (woodBlock.getConfig().hasQuarterLog()) {
 			woodBuilder
 				.add(woodBlock.quarterLog)
 				.add(woodBlock.strippedQuarterLog);
 			getOrCreateTagBuilder(TerrestriaBlockTags.STRIPPED_LOGS).add(woodBlock.strippedQuarterLog);
 		}
+
+		if (woodBlock.getConfig().hasMosaic()) {
+			getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+				.add(woodBlock.mosaic)
+				.add(woodBlock.mosaicSlab)
+				.add(woodBlock.mosaicStairs);
+
+			getOrCreateTagBuilder(BlockTags.SLABS).add(woodBlock.slab);
+			getOrCreateTagBuilder(BlockTags.STAIRS).add(woodBlock.stairs);
+		}
+
+		if (woodBlock.getConfig().isBamboo()) {
+			getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(woodBlock.bamboo);
+
+			getOrCreateTagBuilder(BlockTags.BAMBOO_BLOCKS)
+				.add(woodBlock.wood)
+				.add(woodBlock.strippedWood);
+		}
+
 
 		getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(woodBlock.fenceGate);
 		getOrCreateTagBuilder(BlockTags.LEAVES).add(woodBlock.leaves);
@@ -277,7 +296,7 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 
 		// Adding to FENCE_GATES or any WOODEN tag does this for AXE_MINEABLE.
 		getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(woodBlock.leaves);
-		if (woodBlock.hasLeafPile()) {
+		if (woodBlock.getConfig().hasLeafPile()) {
 			getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(woodBlock.leafPile);
 		}
 

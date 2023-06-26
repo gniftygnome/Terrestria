@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/custom_fence_post",
+  "textures": {
+    "particle": "terrestria:block/black_bamboo_fence_particle",
+    "texture": "terrestria:block/black_bamboo_fence"
+  }
+}

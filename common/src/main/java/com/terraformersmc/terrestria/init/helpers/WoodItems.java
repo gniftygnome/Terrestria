@@ -8,8 +8,7 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.*;
 
 public class WoodItems {
-	private final String NAME;
-	private final TerraformBoatType BOAT_TYPE;
+	private final WoodConfig config;
 
 	public final BlockItem log;
 	public final BlockItem quarterLog;
@@ -24,6 +23,9 @@ public class WoodItems {
 	public final BlockItem door;
 	public final BlockItem button;
 	public final BlockItem pressurePlate;
+	public final BlockItem mosaic;
+	public final BlockItem mosaicSlab;
+	public final BlockItem mosaicStairs;
 	public final SignItem sign;
 	public final HangingSignItem hangingSign;
 	public final BlockItem trapdoor;
@@ -32,17 +34,16 @@ public class WoodItems {
 	public final BlockItem strippedWood;
 	public final TerraformBoatItem boat;
 	public final TerraformBoatItem chestBoat;
+	public final BlockItem bamboo;
 
-	private WoodItems(String name, WoodBlocks blocks) {
-		this.NAME = name;
+	private WoodItems(WoodBlocks blocks) {
+		this.config = blocks.getConfig();
 
-		log = TerrestriaRegistry.registerBlockItem(name + "_log", blocks.log);
-		leaves = TerrestriaRegistry.registerBlockItem(name + "_leaves", blocks.leaves);
-		if (blocks.hasLeafPile()) {
-			leafPile = TerrestriaRegistry.registerBlockItem(name + "_leaf_pile", blocks.leafPile);
-		} else {
-			leafPile = null;
-		}
+		// convenience
+		String name = config.name();
+
+		// register manufactured block items
+
 		planks = TerrestriaRegistry.registerBlockItem(name + "_planks", blocks.planks);
 		slab = TerrestriaRegistry.registerBlockItem(name + "_slab", blocks.slab);
 		stairs = TerrestriaRegistry.registerBlockItem(name + "_stairs", blocks.stairs);
@@ -52,20 +53,44 @@ public class WoodItems {
 		button = TerrestriaRegistry.registerBlockItem(name + "_button", blocks.button);
 		pressurePlate = TerrestriaRegistry.registerBlockItem(name + "_pressure_plate", blocks.pressurePlate);
 		trapdoor = TerrestriaRegistry.registerBlockItem(name + "_trapdoor", blocks.trapdoor);
-		sign = TerrestriaRegistry.register(name + "_sign", new SignItem(new Item.Settings().maxCount(16), blocks.sign, blocks.wallSign));
-		hangingSign = TerrestriaRegistry.register(name + "_hanging_sign", new HangingSignItem(blocks.hangingSign, blocks.wallHangingSign, new Item.Settings().maxCount(16)));
-		strippedLog = TerrestriaRegistry.registerBlockItem("stripped_" + name + "_log", blocks.strippedLog);
 
-		BOAT_TYPE = TerrestriaBoats.register(name, planks);
-		if (BOAT_TYPE != null) {
-			boat = (TerraformBoatItem) BOAT_TYPE.getItem();
-			chestBoat = (TerraformBoatItem) BOAT_TYPE.getChestItem();
+		if (config.hasMosaic()) {
+			mosaic = TerrestriaRegistry.registerBlockItem(name + "_mosaic", blocks.mosaic);
+			mosaicSlab = TerrestriaRegistry.registerBlockItem(name + "_mosaic_slab", blocks.mosaicSlab);
+			mosaicStairs = TerrestriaRegistry.registerBlockItem(name + "_mosaic_stairs", blocks.mosaicStairs);
 		} else {
-			boat = null;
-			chestBoat = null;
+			mosaic = null;
+			mosaicSlab = null;
+			mosaicStairs = null;
 		}
 
-		if (blocks.hasWood()) {
+		sign = TerrestriaRegistry.register(name + "_sign", new SignItem(new Item.Settings().maxCount(16), blocks.sign, blocks.wallSign));
+
+		hangingSign = TerrestriaRegistry.register(name + "_hanging_sign", new HangingSignItem(blocks.hangingSign, blocks.wallHangingSign, new Item.Settings().maxCount(16)));
+
+		// register natural and stripped blocks
+
+		if (config.hasLeaves()) {
+			leaves = TerrestriaRegistry.registerBlockItem(name + "_leaves", blocks.leaves);
+		} else {
+			leaves = null;
+		}
+
+		if (config.hasLeafPile()) {
+			leafPile = TerrestriaRegistry.registerBlockItem(name + "_leaf_pile", blocks.leafPile);
+		} else {
+			leafPile = null;
+		}
+
+		if (config.isBamboo()) {
+			log = TerrestriaRegistry.registerBlockItem(name + "_block", blocks.log);
+			strippedLog = TerrestriaRegistry.registerBlockItem("stripped_" + name + "_block", blocks.strippedLog);
+		} else {
+			log = TerrestriaRegistry.registerBlockItem(name + "_log", blocks.log);
+			strippedLog = TerrestriaRegistry.registerBlockItem("stripped_" + name + "_log", blocks.strippedLog);
+		}
+
+		if (config.hasWood()) {
 			wood = TerrestriaRegistry.registerBlockItem(name + "_wood", blocks.wood);
 			strippedWood = TerrestriaRegistry.registerBlockItem("stripped_" + name + "_wood", blocks.strippedWood);
 		} else {
@@ -73,31 +98,55 @@ public class WoodItems {
 			strippedWood = null;
 		}
 
-		if (blocks.hasQuarterLog()) {
+		if (config.hasQuarterLog()) {
 			quarterLog = TerrestriaRegistry.registerBlockItem(name + "_quarter_log", blocks.quarterLog);
 			strippedQuarterLog = TerrestriaRegistry.registerBlockItem("stripped_" + name + "_quarter_log", blocks.strippedQuarterLog);
 		} else {
 			quarterLog = null;
 			strippedQuarterLog = null;
 		}
+
+		// boat items and associated data registration
+
+		if (config.hasBoat()) {
+			TerraformBoatType boatType = config.isBamboo() ?
+					TerrestriaBoats.registerRaft(name, planks) :
+					TerrestriaBoats.register(name, planks);
+
+			if (boatType == null) {
+				throw new NullPointerException("Failed to register boat type: " + name + (config.isBamboo() ? "raft": "boat"));
+			} else {
+				boat = (TerraformBoatItem) boatType.getItem();
+				chestBoat = (TerraformBoatItem) boatType.getChestItem();
+			}
+		} else {
+			boat = null;
+			chestBoat = null;
+		}
+
+		if (config.isBamboo()) {
+			bamboo = TerrestriaRegistry.registerBlockItem("black_bamboo", blocks.bamboo);
+		} else {
+			bamboo = null;
+		}
+
+		this.addCompostables();
+		this.addFuels();
 	}
 
-
-	public static WoodItems register(String name, WoodBlocks blocks) {
-		WoodItems items = new WoodItems(name, blocks);
-
-		items.addCompostables();
-		items.addFuels();
-
-		return items;
+	public static WoodItems register(WoodBlocks blocks) {
+		return new WoodItems(blocks);
 	}
+
 
 	protected void addCompostables() {
 		CompostingChanceRegistry compostingRegistry = CompostingChanceRegistry.INSTANCE;
 		float LEAVES_CHANCE = compostingRegistry.get(Items.OAK_LEAVES);
 
-		compostingRegistry.add(leaves, LEAVES_CHANCE);
-		if (hasLeafPile()) {
+		if (config.hasLeaves()) {
+			compostingRegistry.add(leaves, LEAVES_CHANCE);
+		}
+		if (config.hasLeafPile()) {
 			compostingRegistry.add(leafPile, LEAVES_CHANCE);
 		}
 	}
@@ -109,23 +158,8 @@ public class WoodItems {
 		fuelRegistry.add(fenceGate, 300);
 	}
 
-	public String getName() {
-		return NAME;
-	}
-
-	public boolean hasQuarterLog() {
-		return (quarterLog != null && strippedQuarterLog != null);
-	}
-
-	public boolean hasLeafPile() {
-		return (leafPile != null);
-	}
-
-	public boolean hasWood() {
-		return (wood != null && strippedWood != null);
-	}
-
-	public boolean hasBoat() {
-		return (BOAT_TYPE != null && boat != null && chestBoat != null);
+	// TODO: kill
+	public WoodConfig getConfig() {
+		return config;
 	}
 }

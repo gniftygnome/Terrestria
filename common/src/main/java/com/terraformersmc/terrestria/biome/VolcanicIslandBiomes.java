@@ -38,6 +38,7 @@ public class VolcanicIslandBiomes {
 		builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(TerrestriaPlacedFeatures.JUNGLE_PALM_TREES));
 		builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(TerrestriaPlacedFeatures.RARE_DUM_DUM_HEADS));
 		builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(TerrestriaPlacedFeatures.DENSER_JUNGLE_PALM_TREES));
+		builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(TerrestriaPlacedFeatures.BLACK_BAMBOO_LIGHT));
 		DefaultBiomeFeatures.addDefaultFlowers(builder);
 		builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, entries.ref(TerrestriaPlacedFeatures.PATCH_VOLCANIC_ISLAND_GRASS));
 		DefaultBiomeFeatures.addDefaultGrass(builder);

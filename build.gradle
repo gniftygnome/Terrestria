@@ -125,6 +125,7 @@ subprojects {
 	version = rootProject.version
 
 	runClient.enabled = false
+	runServer.enabled = false
 
 	// Ferry functionality but for subprojects
 	publishing {

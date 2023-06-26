@@ -70,6 +70,8 @@ public class TerrestriaPlacedFeatures {
 	public static final RegistryKey<PlacedFeature> DENSEST_FANCY_OAK_TREES = createRegistryKey("densest_fancy_oak_trees");
 	public static final RegistryKey<PlacedFeature> JUNGLE_PALM_TREES = createRegistryKey("jungle_palm_trees");
 	public static final RegistryKey<PlacedFeature> DENSER_JUNGLE_PALM_TREES = createRegistryKey("denser_jungle_palm_trees");
+	public static final RegistryKey<PlacedFeature> BLACK_BAMBOO_LIGHT = createRegistryKey("black_bamboo_light");
+	public static final RegistryKey<PlacedFeature> BLACK_BAMBOO = createRegistryKey("black_bamboo");
 	public static final RegistryKey<PlacedFeature> RARE_DUM_DUM_HEADS = createRegistryKey("rare_dum_dum_heads");
 	public static final RegistryKey<PlacedFeature> DENSE_JAPANESE_MAPLE_TREES = createRegistryKey("dense_japanese_maple_trees");
 	public static final RegistryKey<PlacedFeature> DENSE_DARK_JAPANESE_MAPLE_TREES = createRegistryKey("dense_dark_japanese_maple_trees");
@@ -277,6 +279,16 @@ public class TerrestriaPlacedFeatures {
 			SurfaceLevelFilterPlacementModifier.of(Heightmap.Type.WORLD_SURFACE_WG, 72, 320),
 			PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
 			BlockFilterPlacementModifier.of(ON_DIRT_OR_SAND)));
+
+		entries.add(BLACK_BAMBOO_LIGHT, placeFeature(entries, TerrestriaConfiguredFeatures.BLACK_BAMBOO_NO_PODZOL,
+				RarityFilterPlacementModifier.of(4),
+				SquarePlacementModifier.of(),
+				PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP));
+
+		entries.add(BLACK_BAMBOO, placeFeature(entries, TerrestriaConfiguredFeatures.BLACK_BAMBOO_SOME_PODZOL,
+				NoiseBasedCountPlacementModifier.of(160, 80.0, 0.3),
+				SquarePlacementModifier.of(),
+				PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP));
 
 		entries.add(RARE_DUM_DUM_HEADS, placeFeature(entries, TerrestriaConfiguredFeatures.DUM_DUM_HEAD,
 			PlacedFeatures.createCountExtraModifier(0, 0.1f, 1),

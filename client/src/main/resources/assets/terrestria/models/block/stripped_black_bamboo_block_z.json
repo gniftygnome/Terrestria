@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_uv_locked_z",
+  "textures": {
+    "end": "terrestria:block/stripped_black_bamboo_block_top",
+    "side": "terrestria:block/stripped_black_bamboo_block"
+  }
+}

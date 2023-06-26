@@ -31,9 +31,12 @@ public class TerrestriaItemGroups {
 	 * These items are the last Vanilla item of a "similar" type to items we add to Vanilla groups.
 	 * Each is used to build a collection of items which will be inserted below the Vanilla item.
 	 */
+	private static final Item BUILDING_BAMBOO_ITEMS = Items.BAMBOO_BUTTON;
 	private static final Item BUILDING_STONE_ITEMS = Items.MOSSY_STONE_BRICK_WALL;
 	private static final Item BUILDING_WOOD_ITEMS = Items.CHERRY_BUTTON;
+	private static final Item FUNCTIONAL_BAMBOO_SIGN = Items.BAMBOO_HANGING_SIGN;
 	private static final Item FUNCTIONAL_SIGN = Items.CHERRY_HANGING_SIGN;
+	private static final Item NATURAL_BAMBOO = Items.BAMBOO;
 	private static final Item NATURAL_CACTUS = Items.CACTUS;
 	private static final Item NATURAL_DIRT_ITEMS = Items.FARMLAND;
 	private static final Item NATURAL_LEAVES = Items.CHERRY_LEAVES;
@@ -44,6 +47,7 @@ public class TerrestriaItemGroups {
 	private static final Item NATURAL_TALL_VEGETATION = Items.LARGE_FERN;
 	private static final Item NATURAL_VEGETATION = Items.FERN;
 	private static final Item TOOLS_BOAT = Items.CHERRY_CHEST_BOAT;
+	private static final Item TOOLS_RAFT = Items.BAMBOO_CHEST_RAFT;
 
 	static {
 		ITEM_GROUP_ENTRY_MAPS = new HashMap<>(8);
@@ -154,6 +158,8 @@ public class TerrestriaItemGroups {
 		addWoodEntries(TerrestriaItems.WILLOW);
 		addWoodEntries(TerrestriaItems.YUCCA_PALM);
 
+		addWoodEntries(TerrestriaItems.BLACK_BAMBOO);
+
 
 		/*
 		 * Add the items configured above to the Vanilla item groups.
@@ -248,49 +254,68 @@ public class TerrestriaItemGroups {
 	}
 
 	private static void addWoodEntries(WoodItems items) {
+		Item buildingWoodItems = items.getConfig().isBamboo() ? BUILDING_BAMBOO_ITEMS : BUILDING_WOOD_ITEMS;
+		Item functionalSign = items.getConfig().isBamboo() ? FUNCTIONAL_BAMBOO_SIGN : FUNCTIONAL_SIGN;
+		Item toolsBoat = items.getConfig().isBamboo() ? TOOLS_RAFT : TOOLS_BOAT;
+
 		// BUILDING BLOCKS
 
 		// Wood Items
-		addGroupEntry(items.log, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		if (items.hasQuarterLog()) {
-			addGroupEntry(items.quarterLog, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
+		addGroupEntry(items.log, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		if (items.getConfig().hasQuarterLog()) {
+			addGroupEntry(items.quarterLog, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
 		}
-		if (items.hasWood()) {
-			addGroupEntry(items.wood, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
+		if (items.getConfig().hasWood()) {
+			addGroupEntry(items.wood, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
 		}
-		addGroupEntry(items.strippedLog, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		if (items.hasQuarterLog()) {
-			addGroupEntry(items.strippedQuarterLog, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
+		addGroupEntry(items.strippedLog, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		if (items.getConfig().hasQuarterLog()) {
+			addGroupEntry(items.strippedQuarterLog, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
 		}
-		if (items.hasWood()) {
-			addGroupEntry(items.strippedWood, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
+		if (items.getConfig().hasWood()) {
+			addGroupEntry(items.strippedWood, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
 		}
-		addGroupEntry(items.planks, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.stairs, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.slab, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.fence, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.fenceGate, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.door, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.trapdoor, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.pressurePlate, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
-		addGroupEntry(items.button, ItemGroups.BUILDING_BLOCKS, BUILDING_WOOD_ITEMS);
+		addGroupEntry(items.planks, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		if (items.getConfig().hasMosaic()) {
+			addGroupEntry(items.mosaic, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		}
+		addGroupEntry(items.stairs, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		if (items.getConfig().hasMosaic()) {
+			addGroupEntry(items.mosaicStairs, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		}
+		addGroupEntry(items.slab, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		if (items.getConfig().hasMosaic()) {
+			addGroupEntry(items.mosaicSlab, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		}
+		addGroupEntry(items.fence, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		addGroupEntry(items.fenceGate, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		addGroupEntry(items.door, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		addGroupEntry(items.trapdoor, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		addGroupEntry(items.pressurePlate, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
+		addGroupEntry(items.button, ItemGroups.BUILDING_BLOCKS, buildingWoodItems);
 
 
 		// NATURAL
 
 		// Wood Items
-		addGroupEntry(items.log, ItemGroups.NATURAL, NATURAL_LOG);
-		if (items.hasQuarterLog()) {
-			addGroupEntry(items.quarterLog, ItemGroups.NATURAL, NATURAL_LOG);
-			if (items.hasWood()) {
-				// At the moment, wood generates naturally on all quartered trees...
-				addGroupEntry(items.wood, ItemGroups.NATURAL, NATURAL_LOG);
+		if (items.getConfig().isBamboo()) {
+			addGroupEntry(items.bamboo, ItemGroups.NATURAL, NATURAL_BAMBOO);
+		} else {
+			addGroupEntry(items.log, ItemGroups.NATURAL, NATURAL_LOG);
+			if (items.getConfig().hasQuarterLog()) {
+				addGroupEntry(items.quarterLog, ItemGroups.NATURAL, NATURAL_LOG);
+				if (items.getConfig().hasWood()) {
+					// At the moment, wood generates naturally on all quartered trees...
+					addGroupEntry(items.wood, ItemGroups.NATURAL, NATURAL_LOG);
+				}
 			}
 		}
 
 		// Leaves
-		addGroupEntry(items.leaves, ItemGroups.NATURAL, NATURAL_LEAVES);
-		if (items.hasLeafPile()) {
+		if (items.getConfig().hasLeaves()) {
+			addGroupEntry(items.leaves, ItemGroups.NATURAL, NATURAL_LEAVES);
+		}
+		if (items.getConfig().hasLeafPile()) {
 			addGroupEntry(items.leafPile, ItemGroups.NATURAL, NATURAL_LEAVES);
 		}
 
@@ -298,16 +323,16 @@ public class TerrestriaItemGroups {
 		// FUNCTIONAL
 
 		// Wood Items
-		addGroupEntry(items.sign, ItemGroups.FUNCTIONAL, FUNCTIONAL_SIGN);
-		addGroupEntry(items.hangingSign, ItemGroups.FUNCTIONAL, FUNCTIONAL_SIGN);
+		addGroupEntry(items.sign, ItemGroups.FUNCTIONAL, functionalSign);
+		addGroupEntry(items.hangingSign, ItemGroups.FUNCTIONAL, functionalSign);
 
 
 		// TOOLS
 
 		// Boats
-		if (items.hasBoat()) {
-			addGroupEntry(items.boat, ItemGroups.TOOLS, TOOLS_BOAT);
-			addGroupEntry(items.chestBoat, ItemGroups.TOOLS, TOOLS_BOAT);
+		if (items.getConfig().hasBoat()) {
+			addGroupEntry(items.boat, ItemGroups.TOOLS, toolsBoat);
+			addGroupEntry(items.chestBoat, ItemGroups.TOOLS, toolsBoat);
 		}
 	}
 

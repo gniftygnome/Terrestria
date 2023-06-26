@@ -13,7 +13,6 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.loot.condition.TableBonusLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.entry.LeafEntry;
-import org.jetbrains.annotations.Nullable;
 
 public class TerrestriaBlockLootTableProvider extends FabricBlockLootTableProvider {
 	protected TerrestriaBlockLootTableProvider(FabricDataOutput dataOutput) {
@@ -56,15 +55,15 @@ public class TerrestriaBlockLootTableProvider extends FabricBlockLootTableProvid
 		addStoneDrops(TerrestriaBlocks.VOLCANIC_ROCK);
 
 		// wood building blocks
-		addWoodDrops(TerrestriaBlocks.CYPRESS, TerrestriaBlocks.CYPRESS_SAPLING);
-		addWoodDrops(TerrestriaBlocks.HEMLOCK, TerrestriaBlocks.HEMLOCK_SAPLING);
-		addWoodDrops(TerrestriaBlocks.JAPANESE_MAPLE, TerrestriaBlocks.JAPANESE_MAPLE_SAPLING);
-		addWoodDrops(TerrestriaBlocks.RAINBOW_EUCALYPTUS, TerrestriaBlocks.RAINBOW_EUCALYPTUS_SAPLING);
-		addWoodDrops(TerrestriaBlocks.REDWOOD, TerrestriaBlocks.REDWOOD_SAPLING);
-		addWoodDrops(TerrestriaBlocks.RUBBER, TerrestriaBlocks.RUBBER_SAPLING);
-		addWoodDrops(TerrestriaBlocks.SAKURA, TerrestriaBlocks.SAKURA_SAPLING);
-		addWoodDrops(TerrestriaBlocks.WILLOW, TerrestriaBlocks.WILLOW_SAPLING);
-		addWoodDrops(TerrestriaBlocks.YUCCA_PALM, null);
+		addWoodDrops(TerrestriaBlocks.CYPRESS);
+		addWoodDrops(TerrestriaBlocks.HEMLOCK);
+		addWoodDrops(TerrestriaBlocks.JAPANESE_MAPLE);
+		addWoodDrops(TerrestriaBlocks.RAINBOW_EUCALYPTUS);
+		addWoodDrops(TerrestriaBlocks.REDWOOD);
+		addWoodDrops(TerrestriaBlocks.RUBBER);
+		addWoodDrops(TerrestriaBlocks.SAKURA);
+		addWoodDrops(TerrestriaBlocks.WILLOW);
+		addWoodDrops(TerrestriaBlocks.YUCCA_PALM);
 
 		// potted things
 		addPottedPlantDrops(TerrestriaBlocks.POTTED_AGAVE);
@@ -168,7 +167,7 @@ public class TerrestriaBlockLootTableProvider extends FabricBlockLootTableProvid
 		addDrop(stoneBlock.pressurePlate);
 	}
 
-	private void addWoodDrops(WoodBlocks woodBlock, @Nullable SaplingBlock sapling) {
+	private void addWoodDrops(WoodBlocks woodBlock) {
 		addDrop(woodBlock.button);
 		addDrop(woodBlock.door, this::doorDrops);
 		addDrop(woodBlock.fence);
@@ -185,19 +184,34 @@ public class TerrestriaBlockLootTableProvider extends FabricBlockLootTableProvid
 		addDrop(woodBlock.wallHangingSign);
 		addDrop(woodBlock.wallSign);
 
-		if (woodBlock.hasWood()) {
+		if (woodBlock.getConfig().hasWood()) {
 			addDrop(woodBlock.wood);
 			addDrop(woodBlock.strippedWood);
 		}
 
-		if (woodBlock.hasQuarterLog()) {
+		if (woodBlock.getConfig().hasQuarterLog()) {
 			addDrop(woodBlock.quarterLog);
 			addDrop(woodBlock.strippedQuarterLog);
 		}
 
-		if (sapling != null) {
-			addDrop(woodBlock.leaves, leavesDrops(woodBlock.leaves, sapling, 0.05f, 0.0625f, 0.083333336f, 0.1f));
-			if (woodBlock.hasLeafPile()) {
+		if (woodBlock.getConfig().hasMosaic()) {
+			addDrop(woodBlock.mosaic);
+			addDrop(woodBlock.mosaicSlab);
+			addDrop(woodBlock.mosaicStairs);
+		}
+
+		if (woodBlock.getConfig().isBamboo()) {
+			addDrop(woodBlock.bamboo);
+		}
+
+		// Saplings with the standard drop rate get attached to the WoodConfig.
+		if (woodBlock.getConfig().hasSapling()) {
+			SaplingBlock sapling = woodBlock.getConfig().sapling();
+
+			if (woodBlock.getConfig().hasLeaves()) {
+				addDrop(woodBlock.leaves, leavesDrops(woodBlock.leaves, sapling, 0.05f, 0.0625f, 0.083333336f, 0.1f));
+			}
+			if (woodBlock.getConfig().hasLeafPile()) {
 				addDrop(woodBlock.leafPile, leavesDrops(woodBlock.leafPile, sapling, 0.00625f, 0.0078125f, 0.010416667f, 0.0125f));
 			}
 		}

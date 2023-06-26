@@ -61,6 +61,9 @@ public class TerrestriaConfiguredFeatures {
 	public static RegistryKey<ConfiguredFeature<?, ?>> SAGUARO_CACTUS = createRegistryKey("saguaro_cactus");
 	public static RegistryKey<ConfiguredFeature<?, ?>> OAK_SHRUB = createRegistryKey("oak_shrub");
 
+	public static RegistryKey<ConfiguredFeature<?, ?>> BLACK_BAMBOO_NO_PODZOL = createRegistryKey("black_bamboo_no_podzol");
+	public static RegistryKey<ConfiguredFeature<?, ?>> BLACK_BAMBOO_SOME_PODZOL = createRegistryKey("black_bamboo_some_podzol");
+
 	public static RegistryKey<ConfiguredFeature<?, ?>> CATTAIL = createRegistryKey("cattail");
 	public static RegistryKey<ConfiguredFeature<?, ?>> DUM_DUM_HEAD = createRegistryKey("dum_dum_head");
 
@@ -189,6 +192,9 @@ public class TerrestriaConfiguredFeatures {
 		entries.add(OAK_DOT_SHRUB, configureFeature(Feature.TREE, dotShrubOf(Blocks.OAK_LOG.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState(), Blocks.OAK_SAPLING.getDefaultState())));
 		entries.add(ACACIA_DOT_SHRUB, configureFeature(Feature.TREE, dotShrubOf(Blocks.ACACIA_LOG.getDefaultState(), Blocks.ACACIA_LEAVES.getDefaultState(), Blocks.ACACIA_SAPLING.getDefaultState())));
 
+		entries.add(BLACK_BAMBOO_NO_PODZOL, configureFeature(TerrestriaFeatures.BLACK_BAMBOO, new ProbabilityConfig(0.0f)));
+		entries.add(BLACK_BAMBOO_SOME_PODZOL, configureFeature(TerrestriaFeatures.BLACK_BAMBOO, new ProbabilityConfig(0.2f)));
+
 		entries.add(CATTAIL, configureFeature(TerrestriaFeatures.CATTAIL, new ProbabilityConfig(0.3F)));
 		entries.add(DUM_DUM_HEAD, configureFeature(TerrestriaFeatures.DUM_DUM_HEAD, DefaultFeatureConfig.INSTANCE));
 	}
@@ -280,8 +286,8 @@ public class TerrestriaConfiguredFeatures {
 	}
 
 	static QuarteredMegaTreeConfig giantSpruceOf(WoodBlocks woodBlocks, BlockState sapling, int minHeight, int extraRandomHeight1, int extraRandomHeight2, int minLeavesRadius, int maxLeavesRadius, int minBareHeight, int maxBareHeight) {
-		if (!woodBlocks.hasQuarterLog()) {
-			throw new IllegalArgumentException("giantSpruceOf() requires WoodBlocks with defined Quarter Logs: " + woodBlocks.getName());
+		if (!woodBlocks.getConfig().hasQuarterLog()) {
+			throw new IllegalArgumentException("giantSpruceOf() requires WoodBlocks with defined Quarter Logs: " + woodBlocks.getConfig().name());
 		}
 		return new QuarteredMegaTreeConfig(new TreeFeatureConfig.Builder(
 				SimpleBlockStateProvider.of(woodBlocks.log),

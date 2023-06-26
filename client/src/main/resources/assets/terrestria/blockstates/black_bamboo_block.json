@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "terrestria:block/black_bamboo_block_x"
+    },
+    "axis=y": {
+      "model": "terrestria:block/black_bamboo_block_y"
+    },
+    "axis=z": {
+      "model": "terrestria:block/black_bamboo_block_z"
+    }
+  }
+}
