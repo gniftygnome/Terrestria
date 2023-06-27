@@ -3,6 +3,7 @@ package com.terraformersmc.terrestria.feature;
 import com.mojang.serialization.Codec;
 import com.terraformersmc.terrestria.block.BlackBambooBlock;
 import com.terraformersmc.terrestria.init.TerrestriaBlocks;
+import com.terraformersmc.terrestria.tag.TerrestriaBlockTags;
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -49,10 +50,12 @@ public class BlackBambooFeature extends Feature<ProbabilityConfig> {
 							if (MathHelper.square(x - origin.getX()) + MathHelper.square(z - origin.getZ()) <= MathHelper.square(radius)) {
 								workingPos.set(x, world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z) - 1, z);
 								BlockState state = world.getBlockState(workingPos);
-								if (state.isOf(TerrestriaBlocks.ANDISOL.getDirt()) || state.isOf(TerrestriaBlocks.ANDISOL.getGrassBlock())) {
-									world.setBlockState(workingPos, TerrestriaBlocks.ANDISOL.getPodzol().getDefaultState(), 2);
-								} else if (BlackBambooFeature.isSoil(world.getBlockState(workingPos))) {
-									world.setBlockState(workingPos, Blocks.PODZOL.getDefaultState(), 2);
+								if (!state.isIn(TerrestriaBlockTags.PODZOL)) {
+									if (state.isOf(TerrestriaBlocks.ANDISOL.getDirt()) || state.isOf(TerrestriaBlocks.ANDISOL.getGrassBlock())) {
+										world.setBlockState(workingPos, TerrestriaBlocks.ANDISOL.getPodzol().getDefaultState(), 2);
+									} else if (BlackBambooFeature.isSoil(world.getBlockState(workingPos))) {
+										world.setBlockState(workingPos, Blocks.PODZOL.getDefaultState(), 2);
+									}
 								}
 							}
 						}
