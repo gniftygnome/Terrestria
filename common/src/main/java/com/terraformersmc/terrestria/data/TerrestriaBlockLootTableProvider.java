@@ -65,6 +65,8 @@ public class TerrestriaBlockLootTableProvider extends FabricBlockLootTableProvid
 		addWoodDrops(TerrestriaBlocks.WILLOW);
 		addWoodDrops(TerrestriaBlocks.YUCCA_PALM);
 
+		addWoodDrops(TerrestriaBlocks.BLACK_BAMBOO);
+
 		// potted things
 		addPottedPlantDrops(TerrestriaBlocks.POTTED_AGAVE);
 		addPottedPlantDrops(TerrestriaBlocks.POTTED_ALOE_VERA);

@@ -63,13 +63,15 @@ public class TerrestriaClient implements ClientModInitializer {
 
 		BlockRenderLayerMap.INSTANCE.putBlocks(
 				DOOR_BLOCK_LAYER,
-				TerrestriaBlocks.REDWOOD.door,
-				TerrestriaBlocks.RAINBOW_EUCALYPTUS.door,
+				TerrestriaBlocks.BLACK_BAMBOO.door,
+				TerrestriaBlocks.BLACK_BAMBOO.trapdoor,
 				TerrestriaBlocks.CYPRESS.door,
-				TerrestriaBlocks.WILLOW.door,
-				TerrestriaBlocks.JAPANESE_MAPLE.door,
-				TerrestriaBlocks.RAINBOW_EUCALYPTUS.trapdoor,
 				TerrestriaBlocks.CYPRESS.trapdoor,
+				TerrestriaBlocks.JAPANESE_MAPLE.door,
+				TerrestriaBlocks.RAINBOW_EUCALYPTUS.door,
+				TerrestriaBlocks.RAINBOW_EUCALYPTUS.trapdoor,
+				TerrestriaBlocks.REDWOOD.door,
+				TerrestriaBlocks.WILLOW.door,
 				TerrestriaBlocks.WILLOW.trapdoor
 		);
 

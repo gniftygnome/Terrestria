@@ -66,6 +66,8 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 		generateWood(exporter, TerrestriaItems.WILLOW, TerrestriaItemTags.WILLOW_LOGS);
 		generateWood(exporter, TerrestriaItems.YUCCA_PALM, TerrestriaItemTags.YUCCA_PALM_LOGS);
 
+		generateWood(exporter, TerrestriaItems.BLACK_BAMBOO, TerrestriaItemTags.BLACK_BAMBOO_BLOCKS);
+
 		// stone building block recipes
 		generateStone(exporter, TerrestriaItems.VOLCANIC_ROCK);
 	}
@@ -99,7 +101,11 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 
 		offerHangingSignRecipe(exporter, woodItem.hangingSign, woodItem.strippedLog);
 
-		offerPlanksRecipe(exporter, woodItem.planks, logsTag, 4);
+		if (woodItem.getConfig().isBamboo()) {
+			offerPlanksRecipe(exporter, woodItem.planks, logsTag, 2);
+		} else {
+			offerPlanksRecipe(exporter, woodItem.planks, logsTag, 4);
+		}
 
 		offerPressurePlateRecipe(exporter, woodItem.pressurePlate, woodItem.planks);
 
@@ -117,8 +123,15 @@ public class TerrestriaRecipeProvider extends FabricRecipeProvider {
 			.criterion("has_planks", InventoryChangedCriterion.Conditions.items(woodItem.planks))
 			.offerTo(exporter);
 
+		if (woodItem.getConfig().isBamboo()) {
+			// it's not null; this is just for IDEA
+			assert woodItem.bamboo != null;
+
+			offerCompactingRecipe(exporter, RecipeCategory.BUILDING_BLOCKS, woodItem.log, woodItem.bamboo);
+		}
+
 		// leaf piles are an optional wood feature
-		if (woodItem.getConfig().hasLeafPile()) {
+		if (woodItem.getConfig().hasLeafPile() && woodItem.getConfig().hasLeaves()) {
 			// it's not null; this is just for IDEA
 			assert (woodItem.leafPile != null);
 

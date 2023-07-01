@@ -5,6 +5,8 @@
   "mixins": [
     "MixinFluidBlock",
     "MixinLavaFluid",
+    "MixinPandaEntity",
+    "MixinPandaEntity$MixinPandaMateGoal",
     "MixinSugarCaneBlock",
     "MixinWaterCreatureEntity",
     "TreeDecoratorTypeAccessor"

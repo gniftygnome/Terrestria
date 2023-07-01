@@ -1,6 +1,8 @@
 archivesBaseName = "terrestria-common"
 
 loom {
+	accessWidenerPath = file("src/main/resources/terrestria-common.accesswidener")
+
 	runs {
 		datagen {
 			server()

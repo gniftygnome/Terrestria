@@ -31,6 +31,8 @@ public final class TerrestriaBlockTags {
 	public static final TagKey<Block> WILLOW_LOGS = TerrestriaBlockTags.of("willow_logs");
 	public static final TagKey<Block> YUCCA_PALM_LOGS = TerrestriaBlockTags.of("yucca_palm_logs");
 
+	public static final TagKey<Block> BLACK_BAMBOO_BLOCKS = TerrestriaBlockTags.of("black_bamboo_blocks");
+
 	@SuppressWarnings("UnnecessaryReturnStatement")
 	private TerrestriaBlockTags() {
 		return;

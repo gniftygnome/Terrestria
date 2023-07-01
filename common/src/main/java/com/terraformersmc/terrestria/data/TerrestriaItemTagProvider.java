@@ -20,8 +20,6 @@ public class TerrestriaItemTagProvider extends FabricTagProvider.ItemTagProvider
 
 	@Override
 	public void configure(RegistryWrapper.WrapperLookup registries) {
-		copy(BlockTags.BAMBOO_BLOCKS, ItemTags.BAMBOO_BLOCKS);
-
 		copy(BlockTags.BUTTONS, ItemTags.BUTTONS);
 
 		copy(BlockTags.DIRT, ItemTags.DIRT);
@@ -103,6 +101,8 @@ public class TerrestriaItemTagProvider extends FabricTagProvider.ItemTagProvider
 		copy(TerrestriaBlockTags.WILLOW_LOGS, TerrestriaItemTags.WILLOW_LOGS);
 		copy(TerrestriaBlockTags.YUCCA_PALM_LOGS, TerrestriaItemTags.YUCCA_PALM_LOGS);
 
+		copy(TerrestriaBlockTags.BLACK_BAMBOO_BLOCKS, TerrestriaItemTags.BLACK_BAMBOO_BLOCKS);
+
 		// wood items
 		addWood(TerrestriaItems.CYPRESS);
 		addWood(TerrestriaItems.HEMLOCK);
@@ -113,6 +113,8 @@ public class TerrestriaItemTagProvider extends FabricTagProvider.ItemTagProvider
 		addWood(TerrestriaItems.SAKURA);
 		addWood(TerrestriaItems.WILLOW);
 		addWood(TerrestriaItems.YUCCA_PALM);
+
+		addWood(TerrestriaItems.BLACK_BAMBOO);
 	}
 
 	private void addStone(StoneItems stoneItem) {

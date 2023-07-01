@@ -31,6 +31,7 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 		getOrCreateTagBuilder(BlockTags.FLOWER_POTS)
 			.add(TerrestriaBlocks.POTTED_AGAVE)
 			.add(TerrestriaBlocks.POTTED_ALOE_VERA)
+			.add(TerrestriaBlocks.POTTED_BLACK_BAMBOO)
 			.add(TerrestriaBlocks.POTTED_BRYCE_SAPLING)
 			.add(TerrestriaBlocks.POTTED_CYPRESS_SAPLING)
 			.add(TerrestriaBlocks.POTTED_DARK_JAPANESE_MAPLE_SAPLING)
@@ -91,6 +92,10 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 			.add(TerrestriaBlocks.INDIAN_PAINTBRUSH)
 			.add(TerrestriaBlocks.MONSTERAS);
 
+		getOrCreateTagBuilder(BlockTags.SWORD_EFFICIENT)
+			.add(TerrestriaBlocks.BLACK_BAMBOO.bamboo)
+			.add(TerrestriaBlocks.BLACK_BAMBOO_SAPLING);
+
 
 		getOrCreateTagBuilder(TerrestriaBlockTags.BLACK_SAND)
 			.add(TerrestriaBlocks.BLACK_SAND);
@@ -122,6 +127,8 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 		addWood(TerrestriaBlockTags.SAKURA_LOGS, TerrestriaBlocks.SAKURA);
 		addWood(TerrestriaBlockTags.WILLOW_LOGS, TerrestriaBlocks.WILLOW);
 		addWood(TerrestriaBlockTags.YUCCA_PALM_LOGS, TerrestriaBlocks.YUCCA_PALM);
+
+		addWood(TerrestriaBlockTags.BLACK_BAMBOO_BLOCKS, TerrestriaBlocks.BLACK_BAMBOO);
 	}
 
 	private void addDirt(DirtBlocks dirtBlock) {
@@ -264,21 +271,16 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 				.add(woodBlock.mosaicSlab)
 				.add(woodBlock.mosaicStairs);
 
-			getOrCreateTagBuilder(BlockTags.SLABS).add(woodBlock.slab);
-			getOrCreateTagBuilder(BlockTags.STAIRS).add(woodBlock.stairs);
+			getOrCreateTagBuilder(BlockTags.SLABS).add(woodBlock.mosaicSlab);
+			getOrCreateTagBuilder(BlockTags.STAIRS).add(woodBlock.mosaicStairs);
 		}
 
 		if (woodBlock.getConfig().isBamboo()) {
 			getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(woodBlock.bamboo);
-
-			getOrCreateTagBuilder(BlockTags.BAMBOO_BLOCKS)
-				.add(woodBlock.wood)
-				.add(woodBlock.strippedWood);
 		}
 
 
 		getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(woodBlock.fenceGate);
-		getOrCreateTagBuilder(BlockTags.LEAVES).add(woodBlock.leaves);
 		getOrCreateTagBuilder(BlockTags.PLANKS).add(woodBlock.planks);
 		getOrCreateTagBuilder(BlockTags.SLABS).add(woodBlock.slab);
 		getOrCreateTagBuilder(BlockTags.STAIRS).add(woodBlock.stairs);
@@ -294,8 +296,12 @@ public class TerrestriaBlockTagProvider extends FabricTagProvider.BlockTagProvid
 		getOrCreateTagBuilder(BlockTags.WOODEN_STAIRS).add(woodBlock.stairs);
 		getOrCreateTagBuilder(BlockTags.WOODEN_TRAPDOORS).add(woodBlock.trapdoor);
 
+		if (woodBlock.getConfig().hasLeaves()) {
+			getOrCreateTagBuilder(BlockTags.LEAVES).add(woodBlock.leaves);
+			getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(woodBlock.leaves);
+		}
+
 		// Adding to FENCE_GATES or any WOODEN tag does this for AXE_MINEABLE.
-		getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(woodBlock.leaves);
 		if (woodBlock.getConfig().hasLeafPile()) {
 			getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(woodBlock.leafPile);
 		}

@@ -27,6 +27,8 @@ public final class TerrestriaItemTags {
 	public static final TagKey<Item> WILLOW_LOGS = TerrestriaItemTags.of("willow_logs");
 	public static final TagKey<Item> YUCCA_PALM_LOGS = TerrestriaItemTags.of("yucca_palm_logs");
 
+	public static final TagKey<Item> BLACK_BAMBOO_BLOCKS = TerrestriaItemTags.of("black_bamboo_blocks");
+
 	@SuppressWarnings("UnnecessaryReturnStatement")
 	private TerrestriaItemTags() {
 		return;
